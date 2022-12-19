@@ -12,7 +12,7 @@ pipeline {
         }
         stage('build docker image'){
             steps{
-                sh 'docker build -t satishalla/nodeapp:$BUILD_NUMBER .'
+                sh 'docker build -t satishalla/nodeapp1:$BUILD_NUMBER .'
             }
         }
         stage('login to dockerhub'){
@@ -22,7 +22,7 @@ pipeline {
         }
         stage('push image to docker hub'){
             steps{
-                sh 'docker push satishalla/nodeapp:$BUILD_NUMBER'
+                sh 'docker push satishalla/nodeapp1:$BUILD_NUMBER'
             }
         }
     }
