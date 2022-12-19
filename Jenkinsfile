@@ -1,35 +1,29 @@
 pipeline {
-    agent any 
+    agent {label "docker-agent"}
     environment {
-    DOCKERHUB_CREDENTIALS = credentials('valaxy-dockerhub')
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-satish')
     }
-    stages { 
-        stage('SCM Checkout') {
+    stages{
+        stage("clone code from git repo"){
             steps{
-            git 'https://github.com/ravdy/nodejs-demo.git'
+                git "https://github.com/saya1a/docker-project.git"
             }
+            
         }
-
-        stage('Build docker image') {
-            steps {  
-                sh 'docker build -t valaxy/nodeapp:$BUILD_NUMBER .'
-            }
-        }
-        stage('login to dockerhub') {
+        stage('build docker image'){
             steps{
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                sh 'docker build -t satishalla/nodeapp:$BUILD_NUMBER .'
             }
         }
-        stage('push image') {
+        stage('login to dockerhub'){
             steps{
-                sh 'docker push valaxy/nodeapp:$BUILD_NUMBER'
+                sh 'docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW'
             }
         }
-}
-post {
-        always {
-            sh 'docker logout'
+        stage('push image to docker hub'){
+            steps{
+                sh 'docker push satishalla/nodeapp:$BUILD_NUMBER'
+            }
         }
     }
 }
-
